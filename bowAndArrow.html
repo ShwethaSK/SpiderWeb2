@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC"-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>
+BOW AND ARROW GAME
+</title>
+<style type="text/css">
+canvas{
+	background-color: #F1F1F1;
+	border:1px solid #D3D3D3;
+}
+</style>
+</head>
+<body onload="startGame()">
+<script type="text/javascript">
+var myGameArea;
+var myGamePiece;
+var m,s,imgData,v;
+var myScore;
+var num=0;
+var arrowCount;
+var count=10;
+function startGame()
+{
+	m=0;
+ s=0;
+ v=0;
+	myGameArea.start();
+}
+    myGameArea={
+    	canvas:document.createElement("canvas"),
+    	start:function()
+    	{
+    		m=0;
+    		s=0;
+    		v=0;
+    		this.canvas.width=750;
+    		this.canvas.height=750;
+    		this.context=this.canvas.getContext("2d");
+    		document.body.insertBefore(this.canvas,document.body.childNodes[0]);
+    		arrowCount=new insert_text(this.context,"20px","consolas","black",100,20);
+    		myScore=new insert_text(this.context,"20px","consolas","black",450,20);
+    		myCircle1=new draw_circle(this.context,50,250,36,0,2*Math.PI,"green");
+    		myGamePiece=new draw_arrow(this.context,50,250,200,250);
+    		myCircle2=new draw_circle(this.context,650,100,90,0,2*Math.PI,"pink");
+    		myCircle3=new draw_circle(this.context,650,100,60,0,2*Math.PI,"yellow");
+    		myCircle4=new draw_circle(this.context,650,100,30,0,2*Math.PI,"lightblue");
+       		this.interval=setInterval(updateGameArea,20);
+       		window.addEventListener('keydown',function(e)
+       		{
+       			myGameArea.key=e.keyCode;
+       		})
+       		window.addEventListener('keyup',function(e)
+       		{
+       			myGameArea.key=false;
+       		})
+    	},
+    	clear:function(){
+    		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+    	},
+    	stop:function(){
+    		clearInterval(this.interval);
+    	}
+    }
+    function insert_text(context,size,font,color,x,y)
+    {
+    	this.size=size;
+    	this.font=font;
+    	this.color=color;
+    	this.x=x;
+    	this.y=y;
+    	this.update=function(){
+    	ctx=context;
+    	ctx.font=this.size+" "+this.font;
+    	ctx.fillStyle=this.color;
+    	ctx.fillText(this.text,this.x,this.y);
+    }
+    }
+    function draw_arrow(context,fromx,fromy,tox,toy)
+    {
+    	this.gamearea=myGameArea;
+    	this.x1=fromx;
+    	this.y1=fromy;
+    	this.x2=tox;
+    	this.y2=toy;
+    	this.speedX=0;
+    	this.speedY=0;
+    	this.update=function(){
+    	var headlen=10;
+    	var angle=Math.atan2(this.y2-this.y1,this.x2-this.x1);
+    	ctx=context;
+    	ctx.beginPath();
+    	ctx.moveTo(this.x1,this.y1);
+    	ctx.lineTo(this.x2,this.y2);
+    	ctx.strokeStyle="black";
+    	ctx.lineWidth=2;
+    	ctx.stroke();
+    	ctx.beginPath();
+    	ctx.moveTo(this.x2,this.y2);
+    	ctx.lineTo(this.x2-headlen*Math.cos(angle-Math.PI/7),this.y2-headlen*Math.sin(angle-Math.PI/7));
+    	ctx.lineTo(this.x2-headlen*Math.cos(angle+Math.PI/7),this.y2-headlen*Math.sin(angle+Math.PI/7));
+    	ctx.lineTo(this.x2,this.y2);
+    	ctx.lineTo(this.x2-headlen*Math.cos(angle-Math.PI/7),this.y2-headlen*Math.sin(angle-Math.PI/7));
+    	ctx.strokeStyle="black";
+    	ctx.lineWidth=2;
+    	ctx.stroke();
+    	ctx.fillStyle="#cc0000";
+    	ctx.fill();
+   }
+   this.color=function()
+   {
+   	imgData=ctx.getImageData(this.x2,this.y2,1,1).data;
+   	return imgData;
+   }
+   this.newpos=function()
+   {
+   	if(m==1)
+   	{
+   	this.x1+=5;
+   	this.x2+=5;
+   }
+   	this.y1+=this.speedY;
+   	this.y2+=this.speedY;
+   }
+   this.crashWith=function(circle)
+   {
+   	if(this.x2==650&&this.color()=="31,23,25,255")
+   	{ num=num+5;
+   	if(count==0)
+   			myGameArea.stop();
+   		count=count-1;
+   		return true;
+   	}
+   	if(this.x2==650&&this.color()=="21,26,28,255")//blue;
+   	{num=num+50;
+   		count=count-1;
+   		if(count==0)
+   			myGameArea.stop();
+   	return true;
+   }
+    if(this.x2==650&&this.color()=="31,31,0,255")
+   { num=num+25;
+   	count=count-1;
+   	if(count==0)
+   			myGameArea.stop();
+    return true;
+}
+   }
+}
+function draw_circle(context,x,y,r,startangle,endangle,color)
+{
+        this.x=x;
+        this.y=y;
+        this.r=r;
+        this.speedX=0;
+        this.speedY=0;
+        this.sa=startangle;
+        this.ea=endangle;
+        this.update=function()
+        {
+        ctx=context;
+        ctx.beginPath();
+        ctx.arc(this.x,this.y,this.r,this.sa,this.ea);
+        ctx.stroke();
+        ctx.fillStyle=color;
+        ctx.fill();
+    }
+    this.newpos1=function()
+    {
+    	if(s==0){
+    	this.y+=1;
+       this.hitsBottom();
+   }
+    if(s==1)
+    {
+    	this.y-=1;
+    	this.hitsTop();
+    }
+    }
+    this.hitsBottom=function()
+    {
+    	var bottom=myGameArea.canvas.height-90;
+    	if(this.y>bottom && s==0)
+    	{
+    		myCircle2.y=660;
+    		myCircle3.y=660;
+    		myCircle4.y=660;
+    		s=1;
+    	}
+    }
+    this.hitsTop=function()
+    {
+    	var top=90;
+    	if(this.y<top &&s==1)
+    	{
+    		myCircle2.y=90;
+    		myCircle3.y=90;
+    		myCircle4.y=90;
+    		s=0;
+    	}
+    }
+        this.newpos=function()
+        {
+        	this.x+=this.speedX;
+        	this.y+=this.speedY;
+        }
+}
+function updateGameArea()
+{
+	if(myGamePiece.crashWith(myCircle2))
+	{
+		v=1;
+		myScore.text="SCORE:"+num;
+ myScore.update();
+ arrowCount.text="NO OF ARROWS REMAINING:"+count;
+	arrowCount.update();
+		setTimeout(function(){myGameArea.stop();},10000);
+		startGame();
+	}
+	else
+	{
+		if(myGamePiece.x1>=750)
+			{
+				if(v==1)
+					v=0;
+				else
+					count=count-1;
+				startGame();
+			}
+	}
+	myGameArea.clear();
+	myGamePiece.speedX=0;
+	myGamePiece.speedY=0;
+	myCircle1.speedX=0;
+	myCircle1.speedY=0;
+	if(myGameArea.key&&myGameArea.key==38)
+	{
+		myGamePiece.speedX=0;
+		myGamePiece.speedY=-1;
+		myCircle1.speedX=0;
+		myCircle1.speedY=-1;
+	}
+	if(myGameArea.key&&myGameArea.key==40)
+	{
+		myGamePiece.speedX=0;
+		myGamePiece.speedY=1;
+		myCircle1.speedX=0;
+		myCircle1.speedY=1;
+	}
+	if(myGameArea.key&&myGameArea.key==32)
+	{
+       m=1;
+	}
+	myScore.text="SCORE:"+num;
+	myScore.update();
+	myCircle2.newpos1();
+	myCircle2.update();
+    myCircle3.newpos1();
+    myCircle3.update();
+    myCircle4.newpos1();
+    myCircle4.update();
+    myCircle1.newpos();
+	myCircle1.update();
+	myGamePiece.newpos();
+	myGamePiece.update();
+	arrowCount.text="NO OF ARROWS REMAINING:"+count;
+	arrowCount.update();
+}
+function pauseGame()
+{
+	myGameArea.stop();
+}
+function restartGame()
+{
+	num=0;
+	count=10;
+	startGame();
+}
+function resumeGame()
+{
+	myGameArea.interval=setInterval(updateGameArea,20);
+}
+</script>
+<button onclick="pauseGame()">PAUSE</button>
+<button onclick="resumeGame()">RESUME</button>
+<button onclick="restartGame()">RESTART</button>
+</body>
+</html>
