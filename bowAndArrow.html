@@ -1,289 +1,432 @@
-<!DOCTYPE html PUBLIC"-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-<head>
-<title>
-BOW AND ARROW GAME
-</title>
-<style type="text/css">
-canvas{
-	background-color: #F1F1F1;
-	border:1px solid #D3D3D3;
-}
-</style>
-</head>
-<body onload="startGame()">
-<script type="text/javascript">
-var myGameArea;
-var myGamePiece;
-var m,s,imgData,v;
-var myScore;
-var num=0;
-var arrowCount;
-var count=10;
-function startGame()
-{
-	m=0;
- s=0;
- v=0;
-	myGameArea.start();
-}
-    myGameArea={
-    	canvas:document.createElement("canvas"),
-    	start:function()
-    	{
-    		m=0;
-    		s=0;
-    		v=0;
-    		this.canvas.width=750;
-    		this.canvas.height=750;
-    		this.context=this.canvas.getContext("2d");
-    		document.body.insertBefore(this.canvas,document.body.childNodes[0]);
-    		arrowCount=new insert_text(this.context,"20px","consolas","black",100,20);
-    		myScore=new insert_text(this.context,"20px","consolas","black",450,20);
-    		myCircle1=new draw_circle(this.context,50,250,36,0,2*Math.PI,"green");
-    		myGamePiece=new draw_arrow(this.context,50,250,200,250);
-    		myCircle2=new draw_circle(this.context,650,100,90,0,2*Math.PI,"pink");
-    		myCircle3=new draw_circle(this.context,650,100,60,0,2*Math.PI,"yellow");
-    		myCircle4=new draw_circle(this.context,650,100,30,0,2*Math.PI,"lightblue");
-       		this.interval=setInterval(updateGameArea,20);
-       		window.addEventListener('keydown',function(e)
-       		{
-       			myGameArea.key=e.keyCode;
-       		})
-       		window.addEventListener('keyup',function(e)
-       		{
-       			myGameArea.key=false;
-       		})
-    	},
-    	clear:function(){
-    		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-    	},
-    	stop:function(){
-    		clearInterval(this.interval);
-    	}
-    }
-    function insert_text(context,size,font,color,x,y)
-    {
-    	this.size=size;
-    	this.font=font;
-    	this.color=color;
-    	this.x=x;
-    	this.y=y;
-    	this.update=function(){
-    	ctx=context;
-    	ctx.font=this.size+" "+this.font;
-    	ctx.fillStyle=this.color;
-    	ctx.fillText(this.text,this.x,this.y);
-    }
-    }
-    function draw_arrow(context,fromx,fromy,tox,toy)
-    {
-    	this.gamearea=myGameArea;
-    	this.x1=fromx;
-    	this.y1=fromy;
-    	this.x2=tox;
-    	this.y2=toy;
-    	this.speedX=0;
-    	this.speedY=0;
-    	this.update=function(){
-    	var headlen=10;
-    	var angle=Math.atan2(this.y2-this.y1,this.x2-this.x1);
-    	ctx=context;
-    	ctx.beginPath();
-    	ctx.moveTo(this.x1,this.y1);
-    	ctx.lineTo(this.x2,this.y2);
-    	ctx.strokeStyle="black";
-    	ctx.lineWidth=2;
-    	ctx.stroke();
-    	ctx.beginPath();
-    	ctx.moveTo(this.x2,this.y2);
-    	ctx.lineTo(this.x2-headlen*Math.cos(angle-Math.PI/7),this.y2-headlen*Math.sin(angle-Math.PI/7));
-    	ctx.lineTo(this.x2-headlen*Math.cos(angle+Math.PI/7),this.y2-headlen*Math.sin(angle+Math.PI/7));
-    	ctx.lineTo(this.x2,this.y2);
-    	ctx.lineTo(this.x2-headlen*Math.cos(angle-Math.PI/7),this.y2-headlen*Math.sin(angle-Math.PI/7));
-    	ctx.strokeStyle="black";
-    	ctx.lineWidth=2;
-    	ctx.stroke();
-    	ctx.fillStyle="#cc0000";
-    	ctx.fill();
-   }
-   this.color=function()
-   {
-   	imgData=ctx.getImageData(this.x2,this.y2,1,1).data;
-   	return imgData;
-   }
-   this.newpos=function()
-   {
-   	if(m==1)
-   	{
-   	this.x1+=5;
-   	this.x2+=5;
-   }
-   	this.y1+=this.speedY;
-   	this.y2+=this.speedY;
-   }
-   this.crashWith=function(circle)
-   {
-   	if(this.x2==650&&this.color()=="31,23,25,255")
-   	{ num=num+5;
-   	if(count==0)
-   			myGameArea.stop();
-   		count=count-1;
-   		return true;
-   	}
-   	if(this.x2==650&&this.color()=="21,26,28,255")//blue;
-   	{num=num+50;
-   		count=count-1;
-   		if(count==0)
-   			myGameArea.stop();
-   	return true;
-   }
-    if(this.x2==650&&this.color()=="31,31,0,255")
-   { num=num+25;
-   	count=count-1;
-   	if(count==0)
-   			myGameArea.stop();
-    return true;
-}
-   }
-}
-function draw_circle(context,x,y,r,startangle,endangle,color)
-{
-        this.x=x;
-        this.y=y;
-        this.r=r;
-        this.speedX=0;
-        this.speedY=0;
-        this.sa=startangle;
-        this.ea=endangle;
-        this.update=function()
+      <!DOCTYPE html PUBLIC"-//W3C//DTD XHTML 1.0 Transitional//EN"
+      	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      <html>
+      <head>
+      <title> <!--adding title of web page-->
+      BOW AND ARROW GAME
+      </title>
+      <style type="text/css">
+      canvas{
+      	background-color: #E6E6FA;
+      	border:1px solid #D3D3D3;
+      }
+      audio{
+        display:none;
+      }
+      </style>
+      </head>
+      <body onload="startGame()"> <!--to start game as soo  as page loads-->
+      <script type="text/javascript">
+      var myGameArea,myGamePiece,n;
+      var m,s,imgData,v,myScore,arrowCount,p,rev,l;
+      var num=0;
+      var count=10;
+      var k=0;
+      var audi,crsh,comp1,comp2,comp3,obsta1,obsta2;
+      function startGame() //function called to start the game
+      {
+      	m=0;
+       s=0;
+       v=0;
+       l=0;
+       n=1;
+       audi=document.getElementById("audi"); //audio element for background music
+       crsh=document.getElementById("crash"); //audio element for crash sound
+      	myGameArea.start();
+      }
+          myGameArea={
+          	canvas:document.createElement("canvas"), //creating the canvas
+          	start:function()
+          	{
+              n=1;
+              p=0;
+            	m=0;
+          		s=0;
+          		v=0;
+              l=0;
+          		this.canvas.width=750;
+          		this.canvas.height=750;
+          		this.context=this.canvas.getContext("2d");
+          		document.body.insertBefore(this.canvas,document.body.childNodes[0]);
+          		arrowCount=new insert_text(this.context,"20px","consolas","black",100,20); //inserting textbox for keeping count of no .of arrows left
+          		myScore=new insert_text(this.context,"20px","consolas","black",450,20); //inserting score textbox
+          		myCircle1=new draw_circle(this.context,50,250,36,0,2*Math.PI,"green"); //drawing the base of arrow
+          		myGamePiece=new draw_arrow(this.context,50,250,200,250); //drawing arrow
+          		myCircle2=new draw_circle(this.context,650,100,90,0,2*Math.PI,"pink"); //drawing outer circle of dartboard
+          		myCircle3=new draw_circle(this.context,650,100,60,0,2*Math.PI,"yellow"); //drawing middle circle of dartboard
+          		myCircle4=new draw_circle(this.context,650,100,30,0,2*Math.PI,"lightblue");//drawing inner circle of dartboard
+              comp1=new component(this.context,50,50,350,375,"red");//drawing first obstacle
+              comp2=new component(this.context,50,50,400,100,"blue");//drawing second obstacle
+              comp3=new component(this.context,50,50,275,580,"orange");//drawing third obstacle
+              obsta1=new insert_text(this.context,"20px","arial","black",275,275);//drawing speedup bonus
+              obsta2=new insert_text(this.context,"20px","arial","black",400,500);//drawing reverse obstacle
+              rev=new draw_arrow(myGameArea.context,400,500,250,500);//drawing reverse arrow
+              if(k==0)
+             		{this.interval=setInterval(updateGameArea,20);} //updating game every 1/20 second
+             		window.addEventListener('keydown',function(e)//checking for keyboard press
+             		{
+             			myGameArea.key=e.keyCode;
+             		})
+             		window.addEventListener('keyup',function(e)
+             		{
+             			myGameArea.key=false;
+             		})
+          	},
+          	clear:function(){
+          		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+          	},
+          	stop:function(){
+          		clearInterval(this.interval);
+          	}
+          }
+          function component(context,width,height,x,y,color)//function for drawing obstacles
+          {
+            this.width=width;
+            this.height=height;
+            this.color=color;
+            this.x=x;
+            this.y=y;
+            this.update=function()
+            {
+              ctx=context;
+              ctx.fillStyle=this.color;
+              ctx.fillRect(this.x,this.y,this.width,this.height);//drawing the rectangle
+            }
+          }
+          function insert_text(context,size,font,color,x,y)//function for inserting the text
+          {
+          	this.size=size;
+          	this.font=font;
+          	this.color=color;
+          	this.x=x;
+          	this.y=y;
+          	this.update=function(){
+          	ctx=context;
+          	ctx.font=this.size+" "+this.font;
+            if(font=="arial")
+            {
+              ctx.strokeStyle=this.color;
+            ctx.strokeText(this.text,this.x,this.y);//inserting text to serve as obstacles
+            }
+            else
+            {
+           ctx.fillStyle=this.color;
+            ctx.fillText(this.text,this.x,this.y);//inserting text to keep count of score and no. of arrows left
+            }
+          }
+          }
+          function draw_arrow(context,fromx,fromy,tox,toy)//function called to draw arrow
+          {
+          	this.gamearea=myGameArea;
+          	this.x1=fromx;
+          	this.y1=fromy;
+          	this.x2=tox;
+          	this.y2=toy;
+          	this.speedX=0;
+          	this.speedY=0;
+          	this.update=function(){
+          	var headlen=10;
+          	var angle=Math.atan2(this.y2-this.y1,this.x2-this.x1);
+          	ctx=context;
+          	ctx.beginPath();
+          	ctx.moveTo(this.x1,this.y1);
+          	ctx.lineTo(this.x2,this.y2);
+          	ctx.strokeStyle="black";
+          	ctx.lineWidth=2;
+          	ctx.stroke();
+          	ctx.beginPath();
+          	ctx.moveTo(this.x2,this.y2);
+          	ctx.lineTo(this.x2-headlen*Math.cos(angle-Math.PI/7),this.y2-headlen*Math.sin(angle-Math.PI/7));
+          	ctx.lineTo(this.x2-headlen*Math.cos(angle+Math.PI/7),this.y2-headlen*Math.sin(angle+Math.PI/7));
+          	ctx.lineTo(this.x2,this.y2);
+          	ctx.lineTo(this.x2-headlen*Math.cos(angle-Math.PI/7),this.y2-headlen*Math.sin(angle-Math.PI/7));
+          	ctx.strokeStyle="black";
+          	ctx.lineWidth=2;
+          	ctx.stroke();
+          	ctx.fillStyle="#cc0000";
+          	ctx.fill();
+         }
+         this.color=function()
+         {
+          ctx=myGameArea.context;
+         	imgData=ctx.getImageData(this.x2,this.y2,1,1).data;//getting color of current position of arrowhead
+         	return imgData;
+         }
+         this.newpos=function()
+         {
+          if(l==1)//checking for reverse arrow
+          {
+            this.x1-=8;
+            this.x2-=8;
+          }
+         	if(m==1)//checking for arrow left from bow
+         	{
+         	this.x1+=5;
+         	this.x2+=5;
+         }
+         if(p==1)//checking for arrow after speedup 
+         {
+          this.x1+=12;
+          this.x2+=12;
+         }
+         	this.y1+=this.speedY;//for moving the arrow
+         	this.y2+=this.speedY;//for moving the arrow
+         }
+         this.crashWith=function()
         {
-        ctx=context;
-        ctx.beginPath();
-        ctx.arc(this.x,this.y,this.r,this.sa,this.ea);
-        ctx.stroke();
-        ctx.fillStyle=color;
-        ctx.fill();
-    }
-    this.newpos1=function()
-    {
-    	if(s==0){
-    	this.y+=1;
-       this.hitsBottom();
-   }
-    if(s==1)
-    {
-    	this.y-=1;
-    	this.hitsTop();
-    }
-    }
-    this.hitsBottom=function()
-    {
-    	var bottom=myGameArea.canvas.height-90;
-    	if(this.y>bottom && s==0)
-    	{
-    		myCircle2.y=660;
-    		myCircle3.y=660;
-    		myCircle4.y=660;
-    		s=1;
-    	}
-    }
-    this.hitsTop=function()
-    {
-    	var top=90;
-    	if(this.y<top &&s==1)
-    	{
-    		myCircle2.y=90;
-    		myCircle3.y=90;
-    		myCircle4.y=90;
-    		s=0;
-    	}
-    }
-        this.newpos=function()
-        {
-        	this.x+=this.speedX;
-        	this.y+=this.speedY;
+          if(this.color()=="0,0,0,255")//checking for collision of arrow with black text obstacles
+      { 
+      if(count==0)
+      {
+        alert("Game over");
+        myGameArea.stop();
+      }
+       if(n==1)
+        {count=count-1;
+      n=0;}
+            if(this.y2<=375)//to confirm collision with speedup bonus
+            p=1;
+          else//to confirm collision with reverse obstacle
+            l=1;
+          }
+      if(this.color()=="255,0,0,255")//checking for collision with red obstacle
+          {
+            if(count==0){
+              alert("Game over");
+              myGameArea.stop();
+            }
+            count=count-1;
+          myGameArea.start();
         }
-}
-function updateGameArea()
-{
-	if(myGamePiece.crashWith(myCircle2))
-	{
-		v=1;
-		myScore.text="SCORE:"+num;
- myScore.update();
- arrowCount.text="NO OF ARROWS REMAINING:"+count;
-	arrowCount.update();
-		setTimeout(function(){myGameArea.stop();},10000);
-		startGame();
-	}
-	else
-	{
-		if(myGamePiece.x1>=750)
-			{
-				if(v==1)
-					v=0;
-				else
-					count=count-1;
-				startGame();
-			}
-	}
-	myGameArea.clear();
-	myGamePiece.speedX=0;
-	myGamePiece.speedY=0;
-	myCircle1.speedX=0;
-	myCircle1.speedY=0;
-	if(myGameArea.key&&myGameArea.key==38)
-	{
-		myGamePiece.speedX=0;
-		myGamePiece.speedY=-1;
-		myCircle1.speedX=0;
-		myCircle1.speedY=-1;
-	}
-	if(myGameArea.key&&myGameArea.key==40)
-	{
-		myGamePiece.speedX=0;
-		myGamePiece.speedY=1;
-		myCircle1.speedX=0;
-		myCircle1.speedY=1;
-	}
-	if(myGameArea.key&&myGameArea.key==32)
-	{
-       m=1;
-	}
-	myScore.text="SCORE:"+num;
-	myScore.update();
-	myCircle2.newpos1();
-	myCircle2.update();
-    myCircle3.newpos1();
-    myCircle3.update();
-    myCircle4.newpos1();
-    myCircle4.update();
-    myCircle1.newpos();
-	myCircle1.update();
-	myGamePiece.newpos();
-	myGamePiece.update();
-	arrowCount.text="NO OF ARROWS REMAINING:"+count;
-	arrowCount.update();
-}
-function pauseGame()
-{
-	myGameArea.stop();
-}
-function restartGame()
-{
-	num=0;
-	count=10;
-	startGame();
-}
-function resumeGame()
-{
-	myGameArea.interval=setInterval(updateGameArea,20);
-}
-</script>
-<button onclick="pauseGame()">PAUSE</button>
-<button onclick="resumeGame()">RESUME</button>
-<button onclick="restartGame()">RESTART</button>
-</body>
-</html>
+      if(this.x2>=400&&this.x2<=450&&this.y2>=100&&this.y2<=150)//checking for collision with blue obstacle
+      {
+        if(count==0)
+          {    alert("Game over");
+              myGameArea.stop();
+            }
+          count=count-1;
+          myGameArea.start();
+        }
+        if(this.color()=="255,165,0,255")//checking for collision with orange obstacle
+          {
+            if(count==0)
+            {
+              alert("Game over");
+              myGameArea.stop();
+            }
+          count=count-1;
+          myGameArea.start();
+        }
+      if(this.x2==650&&this.color()=="31,24,25,255")//checking for collision with outer circle of dartboard
+         	{ num=num+5;
+         	if(count==0)
+            { 
+              alert("Game over");
+         			myGameArea.stop();
+          }
+            if(p==0)
+         		count=count-1;
+         		return true;
+         	}
+      if(this.x2==650&&this.color()=="21,27,28,255")//checking for collision with inner circle of dartboard
+         	{num=num+50;
+         		if(count==0)
+            {
+              alert("Game over");
+         			myGameArea.stop();
+            }
+            if(p==0)
+            count=count-1;
+         	return true;
+         }
+       if(this.x2==650&&this.color()=="31,31,0,255")//checking for collision with middle circle of dartboard
+         { num=num+25;
+         	if(count==0)
+          {
+            alert("Game over");
+         			myGameArea.stop();
+          }
+          if(p==0)
+          count=count-1;
+          return true;
+      }
+      }
+    }
+      function draw_circle(context,x,y,r,startangle,endangle,color)//for drawing circles
+      {
+              this.x=x;
+              this.y=y;
+              this.r=r;
+              this.speedX=0;
+              this.speedY=0;
+              this.sa=startangle;
+              this.ea=endangle;
+              this.update=function()
+              {
+              ctx=context;
+              ctx.beginPath();
+              ctx.arc(this.x,this.y,this.r,this.sa,this.ea);
+              ctx.strokeStyle="purple";
+              ctx.stroke();
+              ctx.fillStyle=color;
+              ctx.fill();
+          }
+          this.newpos1=function()//updating position of circles
+          {
+          	if(s==0){
+          	this.y+=1;
+             this.hitsBottom();//if dartboard hits bottom of screen
+         }
+          if(s==1)
+          {
+          	this.y-=1;
+          	this.hitsTop();//if dartboard hits top of screen
+          }
+          }
+          this.hitsBottom=function()//function called if dartboard hits bottom of screen
+          {
+          	var bottom=myGameArea.canvas.height-90;
+          	if(this.y>bottom && s==0)//checking if dartboard hots bottom of screen
+          	{
+          		myCircle2.y=660;
+          		myCircle3.y=660;
+          		myCircle4.y=660;
+          		s=1;
+          	}
+          }
+          this.hitsTop=function()
+          {
+          	var top=90;
+          	if(this.y<top &&s==1)//checking if dartbord hits top of screen
+          	{
+          		myCircle2.y=90;
+          		myCircle3.y=90;
+          		myCircle4.y=90;
+          		s=0;
+          	}
+          }
+              this.newpos=function()//updating position of dartboard
+              {
+              	this.x+=this.speedX;
+              	this.y+=this.speedY;
+              }
+      }
+      function updateGameArea()
+      {
+      	if(myGamePiece.crashWith())//checking for collision of arrow with dartboard
+      	{
+          crsh.play();
+        k=1;
+      		v=1;
+      		myScore.text="SCORE:"+num;
+       myScore.update();//updating score
+       arrowCount.text="NO OF ARROWS REMAINING:"+count;
+      	arrowCount.update();//updating number of arrows left
+      		startGame();
+      	}
+      	else
+      	{
+        k=1;
+      		if(myGamePiece.x1>=750)
+      			{
+      				if(v==1)
+      					v=0;
+      				else if(n==1)
+      					count=count-1;
+      				startGame();
+      			}
+      	}
+        if(l==1&&rev.x1<=0)//in case of reversal of arrow
+        {myScore.text="SCORE:"+num;
+       myScore.update();
+       arrowCount.text="NO OF ARROWS REMAINING:"+count;
+        arrowCount.update();
+          startGame();
+        }
+      	myGameArea.clear();
+        if(l==0)
+        {
+      	myGamePiece.speedX=0;
+      	myGamePiece.speedY=0;
+      }
+      else
+      {
+        rev.speedX=0;
+        rev.speedY=0;
+      }
+      	myCircle1.speedX=0;
+      	myCircle1.speedY=0;
+      	if(myGameArea.key&&myGameArea.key==38)//up arrow pressed
+      	{
+      		myGamePiece.speedX=0;
+      		myGamePiece.speedY=-1;
+      		myCircle1.speedX=0;
+      		myCircle1.speedY=-1;
+      	}
+      	if(myGameArea.key&&myGameArea.key==40)//down arrow pressed
+      	{
+      		myGamePiece.speedX=0;
+      		myGamePiece.speedY=1;
+      		myCircle1.speedX=0;
+      		myCircle1.speedY=1;
+      	}
+      	if(myGameArea.key&&myGameArea.key==32)//space key pressed
+      	{
+             m=1;
+      	}
+      	myScore.text="SCORE:"+num;
+      	myScore.update();
+      	myCircle2.newpos1();
+      	myCircle2.update();
+        myCircle3.newpos1();
+        myCircle3.update();
+        myCircle4.newpos1();
+        myCircle4.update();
+        myCircle1.newpos();
+      	myCircle1.update();
+        if(l==0)
+        {
+      	myGamePiece.newpos();
+      	myGamePiece.update();
+      }
+      else
+      {
+        rev.newpos();
+        rev.update();
+      }
+      	arrowCount.text="NO OF ARROWS REMAINING:"+count;
+      	arrowCount.update();
+        comp1.update();
+        comp2.update();
+        comp3.update();
+        obsta2.text="REVERSE";
+        obsta2.update();
+        obsta1.text="SPEEDUP";
+        obsta1.update();
+      }
+      function pauseGame()//function called when pause button is pressed
+      {
+      	myGameArea.stop();
+        audi.pause();//audio paused
+      }
+      function restartGame()//function called when restart button is pressed
+      {
+      	document.location.reload();//reload game
+      }
+      function resumeGame()//function called when resue button is pressed
+      {
+      	myGameArea.interval=setInterval(updateGameArea,20);
+        audi.play();//to play audio
+      }
+      </script>
+      <audio controls autoplay id="audi">
+      <source src="music.mp3" type="audio/mpeg"><!--setting audio for background music-->
+      </audio>
+      <audio controls id="crash">
+      <source src="crash.mp3" type="audio/mpeg"><!-- setting audio for crash sound-->
+      </audio>
+      <button onclick="pauseGame()">PAUSE</button> <!--pause button-->
+      <button onclick="resumeGame()">RESUME</button> <!--resume button-->
+      <button onclick="restartGame()">RESTART</button><!--restart button-->
+      </body>
+      </html>
